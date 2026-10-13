@@ -178,13 +178,17 @@ function oinc(){
     });
   } catch (e) { /* sem som neste aparelho */ }
 }
-// Voz do celular falando "Excelenteeee!"; se o aparelho não tiver voz, toca o "oinc"
-function excelente(){
+// Voz do celular: cada produto tem a sua frase (vão alternando pela lista);
+// se o aparelho não tiver voz, toca o "oinc"
+const FRASES = ["Excelenteeeee!", "Ótima escolha!", "Esse dá muitos pontos!", "Uma delícia!",
+                "Maravilha!", "Seu cliente vai gostar!", "Que gostoso!"];
+function excelente(cod){
   const sintese = window.speechSynthesis;
   if (!sintese || !window.SpeechSynthesisUtterance) return oinc();
   try {
     sintese.cancel();
-    const fala = new SpeechSynthesisUtterance("Excelenteeeee!");
+    const i = PRODUTOS.findIndex(p => p.cod === cod);
+    const fala = new SpeechSynthesisUtterance(FRASES[(i < 0 ? 0 : i) % FRASES.length]);
     fala.lang = "pt-BR"; fala.rate = 0.85; fala.pitch = 1.35; fala.volume = 1;
     const voz = sintese.getVoices().find(v => /pt[-_]BR/i.test(v.lang));
     if (voz) fala.voice = voz;
@@ -192,7 +196,7 @@ function excelente(){
   } catch (e) { oinc(); }
 }
 function abrir(cod){
-  excelente();
+  excelente(cod);
   const p = PRODUTOS.find(x => x.cod === cod);
   $("f-foto").innerHTML = fotoHTML(p);
   $("f-linha").textContent = "Excelência · " + LINHAS[p.linha];
