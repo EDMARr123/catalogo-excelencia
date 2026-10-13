@@ -178,8 +178,21 @@ function oinc(){
     });
   } catch (e) { /* sem som neste aparelho */ }
 }
+// Voz do celular falando "Excelenteeee!"; se o aparelho não tiver voz, toca o "oinc"
+function excelente(){
+  const sintese = window.speechSynthesis;
+  if (!sintese || !window.SpeechSynthesisUtterance) return oinc();
+  try {
+    sintese.cancel();
+    const fala = new SpeechSynthesisUtterance("Excelenteeeee!");
+    fala.lang = "pt-BR"; fala.rate = 0.85; fala.pitch = 1.35; fala.volume = 1;
+    const voz = sintese.getVoices().find(v => /pt[-_]BR/i.test(v.lang));
+    if (voz) fala.voice = voz;
+    sintese.speak(fala);
+  } catch (e) { oinc(); }
+}
 function abrir(cod){
-  oinc();
+  excelente();
   const p = PRODUTOS.find(x => x.cod === cod);
   $("f-foto").innerHTML = fotoHTML(p);
   $("f-linha").textContent = "Excelência · " + LINHAS[p.linha];
