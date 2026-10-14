@@ -196,7 +196,6 @@ function excelente(cod){
   } catch (e) { oinc(); }
 }
 function abrir(cod){
-  excelente(cod);
   const p = PRODUTOS.find(x => x.cod === cod);
   $("f-foto").innerHTML = fotoHTML(p);
   $("f-linha").textContent = "Excelência · " + LINHAS[p.linha];
